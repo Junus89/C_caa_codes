@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "linspace.h"
+
+
+double *linSpace(int TNum )
+{
+	
+  double Delta = 1.0/TNum;
+  double *newArr=NULL, x;
+  
+  int i;
+  newArr = (double*)malloc(TNum*sizeof(double));
+  for(i = 0; i <TNum; i++)
+    {
+      x += Delta;
+      newArr[i]= x;
+	  //Time[i] = Tint*newArr[i];
+      //printf("linspace[]=%4.4f\n",(double) linspace[i]);
+    }
+	newArr = (double*)realloc(newArr,TNum*sizeof(double));
+	for(i = 0;i<TNum;i++)
+	{
+		x += Delta;
+		newArr[i] = x;
+	}
+
+  return newArr;
+}
+
+/*int main()
+{
+	double Tint = 1.0/30;
+	int TNum=360;
+	double *Time;
+	for(int j=0;j<TNum;j++)
+	{
+		Time[j] = Tint*linSpace(TNum)[j];
+		printf("Time[%d] = %g\n",j,Time[j]);
+	}
+}
+*/
+/*double *Time;
+Time = linSpace(TNum); 
+for(int i=0;i<TNum;i++)
+  {
+    Time[i]=Tint*linSpace(TNum)[i];
+    //printf("Time[%d] = %4.9f\n",i,(double)Time[i]);
+  } */

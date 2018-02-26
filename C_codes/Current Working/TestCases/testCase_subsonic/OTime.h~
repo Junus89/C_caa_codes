@@ -1,0 +1,7 @@
+#ifndef OTime_H_ 
+#define OTime_H_
+
+
+float* forOTime(int s);
+
+#endif

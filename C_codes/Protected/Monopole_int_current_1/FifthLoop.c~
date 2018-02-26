@@ -1,0 +1,75 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+//#include "xmalloc.h"
+//#include "xmalloc.c"
+#include "linspace.h"
+#include "linspace.c"
+
+
+//double *Ones(int n);// Ones function
+
+void fifthLoop(int TNum, int DSNum, double OmegaR, double DX, double DY, double DZ, double DR, double OX, double OY,\
+	 double OZ, double Theta, double *DataXR, double *DataYR, double *DataZR, double *DOrX, double *DOrY, double *DOrZ, double *DOr)
+{
+
+	/*int TNum =3601;
+	int DSNum = 1;
+	double OmegaR = 188.4722;
+	double DX =0.0, DY=1.0, DZ = 0.0, DR = 1.0;
+	double OX = 0.0, OY = 0.0, OZ = 2.0;
+
+	double Theta = 0;*/
+  make_vector(DataXR,TNum);
+  make_vector(DataYR,TNum);
+  make_vector(DataZR,TNum);
+  make_vector(DOrX,TNum);
+  make_vector(DOrY,TNum);
+  make_vector(DOrZ,TNum);
+  make_vector(DOr,TNum);
+	
+  
+  
+  
+  /*double vs[] = {3.2, 1.4, 5.3, 5.1};
+  DataXR = &vs[0];
+  DataYR = &vs[0];
+  DataZR = &vs[0];
+  DOr = &vs[0];*/
+  for(int i=0;i<TNum;i++)
+    {
+
+		DataXR[i] = DR*cos(OmegaR*Tint*linSpace(TNum)[i])+atan2(DY,DX)+Theta);
+        DataYR[i] = DR*sin(OmegaR*Tint*linSpace(TNum)[i])+atan2(DY,DX)+Theta);
+		DataZR[i] = DZ*(Ones(TNum));
+		DOrX[i] = OX-DataXR[i];
+		DOrY[i] = OY-DataYR[i];
+		DOrZ[i] = OZ-DataZR[i];
+		
+		DOr[i] = sqrt(pow(DOrX[i],2)+pow(DOrY[i],2)+pow(DOrZ[i],2));
+		//printf("%g %g %g %g", DataXR[i], DataYR[i], DataZR[i], DOrX[i],DOrY[i],DOrZ[i]);
+		
+	  
+    }
+  
+
+
+
+
+
+  free_vector(DataXR);free_vector(DataYR);free_vector(DataZR);
+  free_vector(DOrX);free_vector(DOrY);free_vector(DOrZ);
+  
+}
+
+
+//function definition ofr ones 
+/*double *Ones(int n)
+{
+	double *Bir;
+	make_vector(Bir,n);
+	return Bir;
+}
+*/
+
+  
