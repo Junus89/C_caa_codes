@@ -96,7 +96,7 @@ double *Ones(int Tnum)
   {
 	  One[i] = 1.0;
   }
-  free(One);
+  //free(One);
   return One;
  
 }
@@ -115,7 +115,8 @@ void fifthLoop(double OmegaR,double Omega, double MaX, double MaY, double MaZ, d
 	double complex SP1T=0.0+0.0*I; double complex SP1B=0.0+0.0*I; double complex SP1E=0.0+0.0*I;
 	double complex SP2T=0.0+0.0*I; double complex SP2B=0.0+0.0*I; double complex SP2E=0.0+0.0*I;
 	double complex SP3T=0.0+0.0*I; double complex SP3B=0.0+0.0*I; double complex SP3E=0.0+0.0*I;
-	
+	double *One;
+    One = Ones(TNum);
 
 	
 	
@@ -127,7 +128,8 @@ void fifthLoop(double OmegaR,double Omega, double MaX, double MaY, double MaZ, d
 
 		DataXR[i] = DR*cos(OmegaR*Time[i]+atan2(DY,DX)+Theta);
         DataYR[i] = DR*sin(OmegaR*Time[i]+atan2(DY,DX)+Theta);
-		DataZR[i] = DZ*Ones(TNum)[i];
+		//DataZR[i] = DZ*Ones(TNum)[i];
+        DataZR[i] = DZ*One[i];
 		DOrX[i] = OX-DataXR[i];
 		DOrY[i] = OY-DataYR[i];
 		DOrZ[i] = OZ-DataZR[i];
@@ -150,14 +152,18 @@ void fifthLoop(double OmegaR,double Omega, double MaX, double MaY, double MaZ, d
 		
 		Vx[i] = -DR*OmegaR*sin(OmegaR*Time[i]+atan2(DY,DX)+Theta);
 		Vy[i] = DR*OmegaR*cos(OmegaR*Time[i]+atan2(DY,DX)+Theta);
-		Vz[i] = 0*Ones(TNum)[i];
+		//Vz[i] = 0*Ones(TNum)[i];
+        Vz[i] = 0*One[i];
 		
 		Q[i] = cos(OmegaM*Time[i])*A;
 		//printf("Q[%i] = %4.9f\n",i,Q[i]);
-		
+		/*
 		Lx[i] = 0*A*Ones(TNum)[i];
 		Ly[i] = 0*A*Ones(TNum)[i];
-		Lz[i] = 0*A*Ones(TNum)[i];
+		Lz[i] = 0*A*Ones(TNum)[i]; */
+        Lx[i] = 0*A*One[i];
+		Ly[i] = 0*A*One[i];
+		Lz[i] = 0*A*One[i];
 		
 		FxM[i] = Lx[i];
 		FyM[i] = Ly[i];
