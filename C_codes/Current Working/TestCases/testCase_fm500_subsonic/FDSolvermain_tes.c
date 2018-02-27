@@ -17,21 +17,18 @@ int main()
 {
 	
 	/*reading ConstantVariable file including file names */
-    FILE *fp;
-    char fdName[128], sdName[128], odName[128];
-	int ObsrSthetaNum,ObsrSFaiNum;
+  FILE *fp;
+  char fdName[128], sdName[128], odName[128];
+  int ObsrSthetaNum,ObsrSFaiNum;
 	//double MaX, MaY, MaZ;
-    fp = fopen("ConstantV.txt","r");
-    while(1 == fscanf(fp,"%s%*[^\n] %s%*[^\n] %s%*[^\n] %d%*[^\n] %lf%*[^\n] %d%*[^\n] %d%*[^\n] %lf%*[^\n] %lf%*[^\n] %lf%*[^\n] %d%*[^\n] %d%*[^\n]\n",fdName, sdName, odName,\
+  fp = fopen("ConstantV.txt","r");
+  while(1 == fscanf(fp,"%s%*[^\n] %s%*[^\n] %s%*[^\n] %d%*[^\n] %lf%*[^\n] %d%*[^\n] %d%*[^\n] %lf%*[^\n] %lf%*[^\n] %lf%*[^\n] %d%*[^\n] %d%*[^\n]\n",fdName, sdName, odName,\
     	 &BNum,&R,&TNum,&FNum,&MaX,&MaY,&MaZ,&ObsrSthetaNum,&ObsrSFaiNum)){
     }
-	
-	fclose(fp);
-	printf("Mx = %f My = %f, Mz = %f\n",MaX,MaY,MaZ);
-    double HalfNum = (ObsrSthetaNum-1)*(ObsrSFaiNum+1)/2;
-    printf("\n-------->Checking:\n ObsrSthetaNum = %d\n ObsrSFeinum = %d\n HalfNum = %lf\n",ObsrSthetaNum, ObsrSFaiNum, HalfNum);
-
-	
+  fclose(fp);
+  printf("Mx = %f My = %f, Mz = %f\n",MaX,MaY,MaZ);
+  double HalfNum = (ObsrSthetaNum-1)*(ObsrSFaiNum+1)/2;
+  printf("\n-------->Checking:\n ObsrSthetaNum = %d\n ObsrSFeinum = %d\n HalfNum = %lf\n",ObsrSthetaNum, ObsrSFaiNum, HalfNum);
   // opening and reading flowdata files
   FILE *fp_f;
   fp_f = fopen("flowdata.txt","r");
@@ -96,7 +93,7 @@ int main()
   WDataSMB BladeMData[]={0};
   for(int i=0;i<sizeof(BladeMData);i++)
     {
-      fscanf(fp_meshB,"%lf %lf %lf %lf %lf %lf",&BladeMData[i].DataX, &BladeMData[i].DataY, &BladeMData[i].DataZ, &BladeMData[i].nxData,&BladeMData[i].nyData,&BladeMData[i].nzData);
+      fscanf(fp_meshB,"%lf %lf %lf %lf %lf %lf",&BladeMData[i].DataX, &BladeMData[i].DataY, &BladeMData[i].DataZ, &BladeMData[i].nxData,&BladeMData[i].nyData,&BladeMData   [i].nzData);
 
     }
   

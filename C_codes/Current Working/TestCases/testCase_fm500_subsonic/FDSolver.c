@@ -96,8 +96,9 @@ double *Ones(int Tnum)
   {
 	  One[i] = 1.0;
   }
-  free(One);
+  
   return One;
+  free(One);
 }
 
 //fifthloop function
