@@ -1,23 +1,42 @@
 clc
 clear
 
- NFFT=4096;
+
+set(0,'DefaultLineLineWidth',1.5)
+
+
+ NFFT=8192;
  ff=load('pXOYM.txt');
+ fff=load('pF.txt');
+ fff1=fff(:,1);
  ff1=ff(:,1);
 % ff1=ff(:,1);
 % ff1=load('pXOYM1.txt');
 % ffTH=load('FDPressureTH.txt');
 %ffth1=ff(:,1);
 %ffth2=ff(:,2);
-cc=real(ifft(ff1,NFFT))*NFFT;
-c=real(ifft(ff,NFFT)*NFFT);
+cc=real(ifft(fff1,NFFT))*NFFT;
+c=real(ifft(fff1,NFFT)*NFFT);
 % d=real(ifft(ff,NFFT)*NFFT);
 ODT = 1/NFFT;
 OTime = ODT*(0:NFFT-1);
-%plot(OTime,c,'k-',OTime,cc,'r-.');
-plot(OTime,cc,'b-.');
-xlim([0,0.005]);
+figure(1)
+hold on
+grid on
+box on
 
+%plot(OTime,4*c,'k-',OTime,cc,'r-.');
+plot(OTime,2*c,'k-');
+%plot(OTime,cc,'r-');
+xlim([0,0.03]);
+hold on
+td = load('TDTimePressure1.txt');
+plot(td(:,1),td(:,2),'r-');
+xlim([0.0,0.053]);
+legend('ifft','ref');
+
+%hold on
+%plot(OTime,ff1,'r-',OTime,fff1,'y-.');
 % legend('ifftMatlab','ifftC');
 
 %%
@@ -25,12 +44,12 @@ xlim([0,0.005]);
 clc
 clear 
 
-NFFT=256;
+NFFT=8192;
 ODT = 1/NFFT;
 OTime = ODT*(0:NFFT-1);
 
-ff1=load('pXOYM.txt');
-
+%ff1=load('pXOYM.txt');
+ff1=load('pF.txt');
 ff=real(ff1);
 for k=1:NFFT/2
     OpMUpHalf(k)=ff(k);
@@ -49,18 +68,32 @@ end
 OpMFull = [OpMUpHalf OpMLowerHalf]';
 
 OpTM = real(ifft(OpMFull,NFFT)*NFFT);
+figure(1)
+hold on
+grid on
+box on
+
 plot(OTime,OpTM,'r')
-xlim([0,0.5]);
+xlim([0,0.02]);
+
+
+hold on
+td = load('TDTimePressure1.txt');
+plot(td(:,1),td(:,2),'k-');
+xlim([0.0,0.053]);
+legend('ifft','ref');
+
 
 %%
 clc
 clear 
 
-NFFT=256;
+NFFT=8192;
 ODT = 1/NFFT;
 OTime = ODT*(0:NFFT-1);
 
-ff1=load('pXOYM.txt');
+%ff1=load('pXOYM.txt');
+ff1=load('pF.txt');
 
 OpMUpHalf = zeros(NFFT/2+1,1);
 OpMHalfConj = zeros(NFFT/2-1,1);
@@ -106,13 +139,19 @@ for j = 1:1
     OpTM(:,j) = real(ifft(OpMFull(:,j),NFFT)*NFFT);
 
 end
+figure(1)
+hold on
+grid on
+box on
 
-plot(OTime,OpTM(:,1),'r-')
+plot(OTime,1.8*OpTM(:,1),'r-')
 xlim([0,0.5]);
 
 hold on
 td = load('TDTimePressure1.txt');
-%plot(td(:,1),td(:,2),'k-');
+plot(td(:,1),td(:,2),'k-');
+xlim([0.0,0.053]);
+legend('ifft','ref');
 
 
 

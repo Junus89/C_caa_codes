@@ -17,5 +17,6 @@ axes = plt.gca()
 axes.set_xlim([0,1500]);
 axes.set_ylim([0,0.018]);
 plt.legend(loc='best')
-plt.show()
+#plt.show()
 #plt.savefig('testCaseSub_fm500TNum7202.png')
+plt.savefig('testCaseSub_fm500TNum150000with2ndFormulaOmega.png')

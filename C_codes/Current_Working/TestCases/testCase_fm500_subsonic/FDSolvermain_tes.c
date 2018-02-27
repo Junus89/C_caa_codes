@@ -203,46 +203,46 @@ int main()
   
 
 
-  make_vector(DataXR,TNum);
-  make_vector(DataYR,TNum);
-  make_vector(DataZR,TNum);
+  DataXR=make_vector(DataXR,TNum);
+  DataYR=make_vector(DataYR,TNum);
+  DataZR=make_vector(DataZR,TNum);
 
   
-  make_vector(DOrX,TNum);
-  make_vector(DOrY,TNum);
-  make_vector(DOrZ,TNum);
-  make_vector(DOr,TNum);
+  DOrX=make_vector(DOrX,TNum);
+  DOrY=make_vector(DOrY,TNum);
+  DOrZ=make_vector(DOrZ,TNum);
+  DOr=make_vector(DOr,TNum);
   
-  make_vector(DORStar,TNum);
-  make_vector(DOR,TNum);
+  DORStar=make_vector(DORStar,TNum);
+  DOR=make_vector(DOR,TNum);
   
-  make_vector(DORStarX,TNum);
-  make_vector(DORStarY,TNum);
-  make_vector(DORStarZ,TNum);
+  DORStarX=make_vector(DORStarX,TNum);
+  DORStarY=make_vector(DORStarY,TNum);
+  DORStarZ=make_vector(DORStarZ,TNum);
   
-  make_vector(DORX,TNum);
-  make_vector(DORY,TNum);
-  make_vector(DORZ,TNum);
-  make_vector(RGamma,TNum);
+  DORX=make_vector(DORX,TNum);
+  DORY=make_vector(DORY,TNum);
+  DORZ=make_vector(DORZ,TNum);
+  RGamma=make_vector(RGamma,TNum);
   
-  make_vector(Vx,TNum);
-  make_vector(Vy,TNum);
-  make_vector(Vz,TNum);
-  make_vector(Q,TNum);
+  Vx=make_vector(Vx,TNum);
+  Vy=make_vector(Vy,TNum);
+  Vz=make_vector(Vz,TNum);
+  Q=make_vector(Q,TNum);
   
-  make_vector(Lx,TNum);
-  make_vector(Ly,TNum);
-  make_vector(Lz,TNum);
-  make_vector(FxM,TNum);
-  make_vector(FyM,TNum); 
-  make_vector(FzM,TNum); 
-  make_vector(FxP,TNum); 
-  make_vector(FyP,TNum); 
-  make_vector(FzP,TNum);
-  make_vector(FRStarM,TNum); 
-  make_vector(FRStarP,TNum);
-  make_vector(FRM,TNum); 
-  make_vector(FRP,TNum);
+  Lx=make_vector(Lx,TNum);
+  Ly=make_vector(Ly,TNum);
+  Lz=make_vector(Lz,TNum);
+  FxM=make_vector(FxM,TNum);
+  FyM=make_vector(FyM,TNum); 
+  FzM=make_vector(FzM,TNum); 
+  FxP=make_vector(FxP,TNum); 
+  FyP=make_vector(FyP,TNum); 
+  FzP=make_vector(FzP,TNum);
+  FRStarM=make_vector(FRStarM,TNum); 
+  FRStarP=make_vector(FRStarP,TNum);
+  FRM=make_vector(FRM,TNum); 
+  FRP=make_vector(FRP,TNum);
   double *One;
   pF = make_dmatrix(FNum,1);
   
@@ -253,8 +253,8 @@ int main()
   for(int n =0; n< FNum;n++)
   {
 	  //double Omega= OmegaM+BNum*(n-5)*OmegaR;
-	  double Omega= OmegaM+BNum*(n-17)*OmegaR;
-	  //double Omega = (n-1)*2*PI*DF;
+	  //double Omega= OmegaM+BNum*(n-17)*OmegaR;
+	  double Omega = (n-1)*2*PI*DF;
 	  double ka = Omega/C_0;
 	  //printf("Omega[%d]=%4.4g   ka[%d] = %4.4g\n",n,Omega[n],n,ka[n]);
   
@@ -339,6 +339,21 @@ int main()
 	  
 
   }
+	
+  /* Writing the Pressure spectrum into a Data */
+  FILE *fwritepF;
+  fwritepF = fopen("pF.txt","w");	
+	  
+	for(int j=0;j<FNum;j++)
+	  {
+			for(int i=20;i<21;i++)
+			{
+			  fprintf(fwritepF,"%lf	%lf\n",creal(pF[j][i]),cimag(pF[j][i]));
+			}
+	  }
+  fclose(fwritepF);
+	
+	
 
  Op = make_dmatrix(FNum,1);
  pXOYM = make_dmatrix(FNum,1);
@@ -402,7 +417,9 @@ int main()
   for(rr=0;rr<FNum;rr++)
   {
 	  //OF[rr] = (OmegaM+BNum*(rr-5)*OmegaR)/(2*PI);
-	  OF[rr] = (OmegaM+BNum*(rr-17)*OmegaR)/(2*PI);
+	  //OF[rr] = (OmegaM+BNum*(rr-17)*OmegaR)/(2*PI);
+		OF[rr] = ((rr-1)*2*PI*DF)/(2*PI);
+		
 	  printf("OF[%d] = %g\n",rr,OF[rr]);
   }
 
