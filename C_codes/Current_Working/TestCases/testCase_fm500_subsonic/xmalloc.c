@@ -10,7 +10,7 @@ void *malloc_or_exit(size_t(nbytes), const char *file, int line)
       exit(EXIT_FAILURE);
     }else
         return x;
-	free(x);
+	//free(x);
 }
 
 /** int main(void){

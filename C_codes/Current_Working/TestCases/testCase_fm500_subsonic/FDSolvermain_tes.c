@@ -243,7 +243,7 @@ int main()
   FRStarP=make_vector(FRStarP,TNum);
   FRM=make_vector(FRM,TNum); 
   FRP=make_vector(FRP,TNum);
-  double *One;
+  //double *One;
   pF = make_dmatrix(FNum,1);
   
   //double **pXOYM,**Op,*OF;
@@ -567,7 +567,7 @@ int main()
   free_vector(FRM); 
   free_vector(FRP);
   free_vector(OF);
-  free_vector(One);
+  //free(One);
   
   free_4Ddmatrix(PBD1,OSNum,BNum,DSNum);
   free_4Ddmatrix(PBD2,OSNum,BNum,DSNum);

@@ -96,8 +96,9 @@ double *Ones(int Tnum)
   {
 	  One[i] = 1.0;
   }
-  //free(One);
+  
   return One;
+  
  
 }
 
@@ -201,6 +202,7 @@ void fifthLoop(double OmegaR,double Omega, double MaX, double MaY, double MaZ, d
 		
 	  
     }
+    free_vector(One);
 
 
 }
