@@ -3,7 +3,7 @@ WriteDataSMeshBlade.txt		# source data file name
 WriteObserverSMesh.txt		# observer data file name
 1 							# Blade number	
 1.0							# Radius of propeller blade
-36001							# TNum
+195000							# TNum
 8192					    # FNum
 0.0 						# MaX
 0.0 						# MaY

@@ -11,7 +11,7 @@ double R;
 double OX,OY,OZ, MaX, MaY, MaZ;
 double Theta;
 double DX,DY,DZ,DR;
-double Time[36001];
+double Time[195000];
 
 double complex ****PBD1,****PBD2,****PBD3;
 double complex ***PB1,***PB2,***PB3;

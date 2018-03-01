@@ -1,6 +1,0 @@
-#ifndef LINSPACE_H_   /* Include guard */
-#define LINSPACE_H_
-
-float* linSpace(int Tnum);  /*Function declaration */
-
-#endif 

@@ -57,7 +57,7 @@ int main()
   
 
   /* Mathematical relations of TNum data */
-  double Tint = 1;
+  double Tint = 13500;
   DT = Tint/(TNum-1);          //...discrete time or sampling time? or sampling time step?
 
 

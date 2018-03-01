@@ -26,13 +26,13 @@ grid on
 box on
 
 %plot(OTime,4*c,'k-',OTime,cc,'r-.');
-plot(OTime,2*c,'k-');
+plot(OTime,7*c,'k-');
 %plot(OTime,cc,'r-');
-xlim([0,0.03]);
+%xlim([0,0.03]);
 hold on
 td = load('TDTimePressure1.txt');
 plot(td(:,1),td(:,2),'r-');
-xlim([0.0,0.053]);
+xlim([0.0,0.013]);
 legend('ifft','ref');
 
 %hold on
