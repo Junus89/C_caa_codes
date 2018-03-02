@@ -48,8 +48,10 @@ int main()
 
 
   double OmegaR = RMaTip*C_0/R;
-  double fR = OmegaR/(2*PI);         // rotation frequency
-  double TR = 1/fR;
+  //double fR = OmegaR/(2*PI);         // rotation frequency
+  //double TR = 1/fR;
+  double TR = 2*PI/(BNum*OmegaR);
+  double fR = 1/TR;
   OmegaM = 500*2*PI;         
   //double fM = 500;                  //pulsation frequency
   printf("---------Matematical relations ------------\n\n");
@@ -57,7 +59,7 @@ int main()
   
 
   /* Mathematical relations of TNum data */
-  double Tint = 13500;
+  double Tint = 27*TR;
   DT = Tint/(TNum-1);          //...discrete time or sampling time? or sampling time step?
 
 
@@ -74,7 +76,7 @@ int main()
   double ODT = Tint/NFFT;
   printf("ODT = %lf\n",ODT);
   /* for construction of OTime */
-  //double *OTime;
+  //double *OTime;r
   
   OTime = make_vector(OTime,NFFT-1); /* calling forOTime function and initializing it */
   for(int i=0;i<NFFT-1;i++)
@@ -83,7 +85,8 @@ int main()
       printf("OTime[%d] = %4.4f\n",i,OTime[i]);
     }
   printf("----checking ----> OTime[5] = %4.4f\n",OTime[5]); /*checking for OTime */
-  double DF = ((1/ODT)/2)*(1/(1.0*FNum/2)); /* here as FNum is int type, should multiply with 1.0 to get the double type DF result */
+  //double DF = ((1/ODT)/2)*(1/(1.0*FNum/2)); /* here as FNum is int type, should multiply with 1.0 to get the double type DF result */
+  double DF = 1/Tint;
   printf("----checking ----> DF = %4.9f\n",DF);
   
   /* reading WriteDataSMeshBlades.dat data */
@@ -361,7 +364,8 @@ int main()
 		 
     for(int i=0;i<FNum;i++)
 	{
-		for(int j=0;j<1;j++)
+        //for(int j=0;j<1;j++)
+		for(int j=20;j<21;j++)
 			 {
 			 	pXOYM[i][j] = pF[i][j];
 				printf("pXOYM[%d][%d]= %g + %g\n",i,j,creal(pXOYM[i][j]),cimag(pXOYM[i][j]));
