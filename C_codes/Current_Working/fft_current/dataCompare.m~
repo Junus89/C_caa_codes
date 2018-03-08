@@ -27,7 +27,7 @@ OTime = ODT*(0:NFFT-1);
 
 figure(1)
 
-plot(OTime,1.87*c(1:end),'r',OTime,1.87*f1(1:end),'k-.','linewidth',2.5);
+plot(OTime,2*c(1:end),'r',OTime,2*f1(1:end),'k-.','linewidth',2.5);
 %plot(OTime,2*f1(1:end),'k-.','linewidth',2.5);
 
 ref=load('TDTimePressure1.txt');
@@ -35,7 +35,7 @@ hold on
 plot(ref(:,1),ref(:,2),'g');
 
 xlim([0,0.055]);
-legend('ifft_{Matlab}','ifft_C','ref');
+legend('ifft_{Matlab}','ifft_C');
 
 % 
 % figure(2)

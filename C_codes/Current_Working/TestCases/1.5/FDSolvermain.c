@@ -7,8 +7,8 @@
 /* ----- including -----header defined functions ------*/
 #include "xmalloc.h"
 #include "xmalloc.c"
-//#include "nextpower.h"
-//#include "nextpower_c.c"
+#include "nextpower.h"
+#include "nextpower_c.c"
 #include "FDSolver.h"
 #include "FDSolver.c"
 
@@ -17,18 +17,18 @@ int main()
 {
 	
 	/*reading ConstantVariable file including file names */
-  FILE *fp;
-  char fdName[128], sdName[128], odName[128];
-  int ObsrSthetaNum,ObsrSFaiNum;
+    FILE *fp;
+    char fdName[128], sdName[128], odName[128];
+	//int BNum, TNum, FNum;
 	//double MaX, MaY, MaZ;
-  fp = fopen("ConstantV.txt","r");
-  while(1 == fscanf(fp,"%s%*[^\n] %s%*[^\n] %s%*[^\n] %d%*[^\n] %lf%*[^\n] %d%*[^\n] %d%*[^\n] %lf%*[^\n] %lf%*[^\n] %lf%*[^\n] %d%*[^\n] %d%*[^\n]\n",fdName, sdName, odName,\
-    	 &BNum,&R,&TNum,&FNum,&MaX,&MaY,&MaZ,&ObsrSthetaNum,&ObsrSFaiNum)){
+    fp = fopen("ConstantV.txt","r");
+    while(1 == fscanf(fp,"%s%*[^\n] %s%*[^\n] %s%*[^\n] %d%*[^\n] %lf%*[^\n] %d%*[^\n] %d%*[^\n] %lf%*[^\n] %lf%*[^\n] %lf%*[^\n]\n",fdName, sdName, odName,\
+    	 &BNum,&R,&TNum,&FNum,&MaX,&MaY,&MaZ)){
     }
-  fclose(fp);
-  printf("Mx = %f My = %f, Mz = %f\n",MaX,MaY,MaZ);
-  double HalfNum = (ObsrSthetaNum-1)*(ObsrSFaiNum+1)/2;
-  printf("\n-------->Checking:\n ObsrSthetaNum = %d\n ObsrSFeinum = %d\n HalfNum = %lf\n",ObsrSthetaNum, ObsrSFaiNum, HalfNum);
+	
+	fclose(fp);
+	
+	
   // opening and reading flowdata files
   FILE *fp_f;
   fp_f = fopen("flowdata.txt","r");
@@ -48,18 +48,16 @@ int main()
 
 
   double OmegaR = RMaTip*C_0/R;
-  //double fR = OmegaR/(2*PI);         // rotation frequency
-  //double TR = 1/fR;
-  double TR = 2*PI/(BNum*OmegaR);
-  double fR = 1/TR;
+  double fR = OmegaR/(2*PI);         // rotation frequency
+  double TR = 1/fR;
   OmegaM = 500*2*PI;         
-  //double fM = 500;                  //pulsation frequency
+  double fM = 500;                  //pulsation frequency
   printf("---------Matematical relations ------------\n\n");
   printf("OmegaR = %4.4f [rad/s], fR = %4.4f [hz], TR = %4.4f [s], OmegaM = %4.4f [rad/s]\n\n",OmegaR, fR, TR, OmegaM);
   
 
   /* Mathematical relations of TNum data */
-  double Tint = 27*TR;
+  double Tint = 1;
   DT = Tint/(TNum-1);          //...discrete time or sampling time? or sampling time step?
 
 
@@ -71,12 +69,12 @@ int main()
   }
     
   
-  int NFFT = FNum;
+  int NFFT = nextPower2(FNum);
   printf("the next power of FNum->NFFT = %d\n",NFFT);
   double ODT = Tint/NFFT;
   printf("ODT = %lf\n",ODT);
   /* for construction of OTime */
-  //double *OTime;r
+  //double *OTime;
   
   OTime = make_vector(OTime,NFFT-1); /* calling forOTime function and initializing it */
   for(int i=0;i<NFFT-1;i++)
@@ -85,8 +83,7 @@ int main()
       printf("OTime[%d] = %4.4f\n",i,OTime[i]);
     }
   printf("----checking ----> OTime[5] = %4.4f\n",OTime[5]); /*checking for OTime */
-  //double DF = ((1/ODT)/2)*(1/(1.0*FNum/2)); /* here as FNum is int type, should multiply with 1.0 to get the double type DF result */
-  double DF = 1/Tint;
+  double DF = ((1/ODT)/2)*(1/(1.0*FNum/2)); /* here as FNum is int type, should multiply with 1.0 to get the double type DF result */
   printf("----checking ----> DF = %4.9f\n",DF);
   
   /* reading WriteDataSMeshBlades.dat data */
@@ -96,7 +93,7 @@ int main()
   WDataSMB BladeMData[]={0};
   for(int i=0;i<sizeof(BladeMData);i++)
     {
-      fscanf(fp_meshB,"%lf %lf %lf %lf %lf %lf",&BladeMData[i].DataX, &BladeMData[i].DataY, &BladeMData[i].DataZ, &BladeMData[i].nxData,&BladeMData[i].nyData,&BladeMData   [i].nzData);
+      fscanf(fp_meshB,"%lf %lf %lf %lf %lf %lf",&BladeMData[i].DataX, &BladeMData[i].DataY, &BladeMData[i].DataZ, &BladeMData[i].nxData,&BladeMData[i].nyData,&BladeMData[i].nzData);
 
     }
   
@@ -166,7 +163,32 @@ int main()
 
   Gamma = sqrt(1/(1-(pow(MaX,2)+pow(MaY,2)+pow(MaZ,2)))); 
   printf("Gamma = %lf\n",Gamma);
+  /* reading data for ObserverSmeshparameter.dat data */
   
+  int ObsrSMeshD, *ObsrSMeshD_ptr, Counter_for_ObsrSMeshD=1, idx_for_ObsrSMeshD, k_for_ObsrSMeshD;
+  FILE *fp_ObsrSMeshD;
+  fp_ObsrSMeshD = fopen("ObserverMeshParameter.txt","r");
+  
+  while(fscanf(fp_ObsrSMeshD,"%d\n",&ObsrSMeshD)!=EOF)
+    {
+      if(ObsrSMeshD_ptr==NULL)
+	{
+	  ObsrSMeshD_ptr = malloc(sizeof(ObsrSMeshD));
+	  *ObsrSMeshD_ptr = ObsrSMeshD;
+	}
+      else 
+	{
+	  Counter_for_ObsrSMeshD++;
+	  ObsrSMeshD_ptr = realloc(ObsrSMeshD_ptr,sizeof(ObsrSMeshD)*Counter_for_ObsrSMeshD);
+	  idx_for_ObsrSMeshD = Counter_for_ObsrSMeshD-1;
+	  *(ObsrSMeshD_ptr+idx_for_ObsrSMeshD)=ObsrSMeshD;
+	}
+    }
+  ObsrSMeshD = 0;
+  int ObsrSthetaNum = ObsrSMeshD_ptr[1];
+  int ObsrSFaiNum = ObsrSMeshD_ptr[2];
+  double HalfNum = (ObsrSthetaNum-1)*(ObsrSFaiNum+1)/2;
+  printf("\n-------->Checking:\n ObsrSthetaNum = %d\n ObsrSFeinum = %d\n HalfNum = %lf\n",ObsrSthetaNum, ObsrSFaiNum, HalfNum);
   
   
     
@@ -206,58 +228,59 @@ int main()
   
 
 
-  DataXR=make_vector(DataXR,TNum);
-  DataYR=make_vector(DataYR,TNum);
-  DataZR=make_vector(DataZR,TNum);
+  make_vector(DataXR,TNum);
+  make_vector(DataYR,TNum);
+  make_vector(DataZR,TNum);
 
   
-  DOrX=make_vector(DOrX,TNum);
-  DOrY=make_vector(DOrY,TNum);
-  DOrZ=make_vector(DOrZ,TNum);
-  DOr=make_vector(DOr,TNum);
+  make_vector(DOrX,TNum);
+  make_vector(DOrY,TNum);
+  make_vector(DOrZ,TNum);
+  make_vector(DOr,TNum);
   
-  DORStar=make_vector(DORStar,TNum);
-  DOR=make_vector(DOR,TNum);
+  make_vector(DORStar,TNum);
+  make_vector(DOR,TNum);
   
-  DORStarX=make_vector(DORStarX,TNum);
-  DORStarY=make_vector(DORStarY,TNum);
-  DORStarZ=make_vector(DORStarZ,TNum);
+  make_vector(DORStarX,TNum);
+  make_vector(DORStarY,TNum);
+  make_vector(DORStarZ,TNum);
   
-  DORX=make_vector(DORX,TNum);
-  DORY=make_vector(DORY,TNum);
-  DORZ=make_vector(DORZ,TNum);
-  RGamma=make_vector(RGamma,TNum);
+  make_vector(DORX,TNum);
+  make_vector(DORY,TNum);
+  make_vector(DORZ,TNum);
+  make_vector(RGamma,TNum);
   
-  Vx=make_vector(Vx,TNum);
-  Vy=make_vector(Vy,TNum);
-  Vz=make_vector(Vz,TNum);
-  Q=make_vector(Q,TNum);
+  make_vector(Vx,TNum);
+  make_vector(Vy,TNum);
+  make_vector(Vz,TNum);
+  make_vector(Q,TNum);
   
-  Lx=make_vector(Lx,TNum);
-  Ly=make_vector(Ly,TNum);
-  Lz=make_vector(Lz,TNum);
-  FxM=make_vector(FxM,TNum);
-  FyM=make_vector(FyM,TNum); 
-  FzM=make_vector(FzM,TNum); 
-  FxP=make_vector(FxP,TNum); 
-  FyP=make_vector(FyP,TNum); 
-  FzP=make_vector(FzP,TNum);
-  FRStarM=make_vector(FRStarM,TNum); 
-  FRStarP=make_vector(FRStarP,TNum);
-  FRM=make_vector(FRM,TNum); 
-  FRP=make_vector(FRP,TNum);
-  //double *One;
+  make_vector(Lx,TNum);
+  make_vector(Ly,TNum);
+  make_vector(Lz,TNum);
+  make_vector(FxM,TNum);
+  make_vector(FyM,TNum); 
+  make_vector(FzM,TNum); 
+  make_vector(FxP,TNum); 
+  make_vector(FyP,TNum); 
+  make_vector(FzP,TNum);
+  make_vector(FRStarM,TNum); 
+  make_vector(FRStarP,TNum);
+  make_vector(FRM,TNum); 
+  make_vector(FRP,TNum);
+  
   pF = make_dmatrix(FNum,1);
   
   //double **pXOYM,**Op,*OF;
- 
+  Op = make_dmatrix(FNum,1);
+  pXOYM = make_dmatrix(FNum,1);
 
  
   for(int n =0; n< FNum;n++)
   {
 	  //double Omega= OmegaM+BNum*(n-5)*OmegaR;
-	  //double Omega= OmegaM+BNum*(n-17)*OmegaR;
-	  double Omega = (n-1)*2*PI*DF;
+	  double Omega= OmegaM+BNum*(n-17)*OmegaR;
+	  //double Omega = (n-1)*2*PI*DF;
 	  double ka = Omega/C_0;
 	  //printf("Omega[%d]=%4.4g   ka[%d] = %4.4g\n",n,Omega[n],n,ka[n]);
   
@@ -342,91 +365,46 @@ int main()
 	  
 
   }
-	
-  /* Writing the Pressure spectrum into a Data */
-  FILE *fwritepF;
-  fwritepF = fopen("pF_New.txt","w");	
-	  
-	for(int j=0;j<FNum;j++)
-	  {
-			for(int i=20;i<21;i++)
-			{
-			  fprintf(fwritepF,"%12.10f	%12.10f\n",creal(pF[j][i]),cimag(pF[j][i]));
-			}
-	  }
-  fclose(fwritepF);
-	
-	
 
- Op = make_dmatrix(FNum,1);
- pXOYM = make_dmatrix(FNum,1);
+
   
 		 
-    for(int i=0;i<FNum;i++)
+for(int i=0;i<FNum;i++)
 	{
-        //for(int j=0;j<1;j++)
-		for(int j=20;j<21;j++)
+		for(int j=0;j<1;j++)
 			 {
 			 	pXOYM[i][j] = pF[i][j];
 				printf("pXOYM[%d][%d]= %g + %g\n",i,j,creal(pXOYM[i][j]),cimag(pXOYM[i][j]));
 			 }
 	}
-	
-  /* Writing the Pressure spectrum into a Data */
-	/* FILE *fwrite33;
-  fwrite33 = fopen("pXOYM.txt","w");	
-	  
-	for(int j=0;j<FNum;j++)
-	  {
-			for(int i=20;i<21;i++)
-			{
-			  fprintf(fwrite33,"%12.9f	%12.9f\n",creal(pXOYM[j][i]),cimag(pXOYM[j][i]));
-			}
-	  }
-  fclose(fwrite33);*/
-	
-  //double Opreal=0;
-  //double Opimag=0;
 
   for(int i=0;i<FNum;i++)
   {
   	//for(int j=(HalfNum-(ObsrSthetaNum-1))+1;j<HalfNum;j++) // try to use with while loop
-		for(int j=20;j<21;j++)
-			{
+	for(int j=20;j<21;j++)
+	{
 	  //pXOYM[i][j] = pF[i][j];
-				Op[i][j] = 2*sqrt(pow(creal(pXOYM[i][j]),2)+pow(cimag(pXOYM[i][j]),2));
+		Op[i][j] = 2*sqrt(pow(creal(pXOYM[i][j]),2)+pow(cimag(pXOYM[i][j]),2));
 	  //Op[i][j] = 2*fabs(pF[i][j]);
-	  		printf("Op[%d][%d] = %g\n",i,j,Op[i][j]);
+	  printf("Op[%d][%d] = %g\n",i,j,Op[i][j]);
 	  
-			}
+	}
 
-		/*for(int j=20;j<21;j++)
-			{
-	            Opreal=creal(pXOYM[i][j]);
-                Opimag=cimag(pXOYM[i][j]);
-				Op[i][j] = 2*(sqrt(pow(Opreal,2)+pow(Opimag,2)));
-	  //Op[i][j] = 2*fabs(pF[i][j]);
-	  		printf("Op[%d][%d] = %g\n",i,j,Op[i][j]);
-	  
-			}*/
-    }
-
-
-
-
-  
+  }
   
   int rr;
   OF = make_vector(OF,FNum);
   for(rr=0;rr<FNum;rr++)
   {
 	  //OF[rr] = (OmegaM+BNum*(rr-5)*OmegaR)/(2*PI);
-	  //OF[rr] = (OmegaM+BNum*(rr-17)*OmegaR)/(2*PI);
-		OF[rr] = ((rr-1)*2*PI*DF)/(2*PI);
-		
+	  OF[rr] = (OmegaM+BNum*(rr-17)*OmegaR)/(2*PI);
 	  printf("OF[%d] = %g\n",rr,OF[rr]);
   }
-
+  
+		  
+		 
+  //OF = (OmegaM+BNum*(-5:FNum-6)*OmegaR)/(2*PI);
+  //
 
   
   rmdir('FD_Spectrum','s');
@@ -534,6 +512,7 @@ int main()
   free(ZO);
   
   /* freeing the pointer */
+  free(ObsrSMeshD_ptr);
   free_vector(OTime);
 
   
@@ -571,7 +550,6 @@ int main()
   free_vector(FRM); 
   free_vector(FRP);
   free_vector(OF);
-  //free(One);
   
   free_4Ddmatrix(PBD1,OSNum,BNum,DSNum);
   free_4Ddmatrix(PBD2,OSNum,BNum,DSNum);

@@ -59,7 +59,7 @@ int main()
   
 
   /* Mathematical relations of TNum data */
-  double Tint = 27*TR;
+  double Tint = 25*TR;
   DT = Tint/(TNum-1);          //...discrete time or sampling time? or sampling time step?
 
 
@@ -248,7 +248,7 @@ int main()
   FRP=make_vector(FRP,TNum);
   //double *One;
   pF = make_dmatrix(FNum,1);
-  
+  OF = make_vector(OF,FNum);
   //double **pXOYM,**Op,*OF;
  
 
@@ -257,8 +257,12 @@ int main()
   {
 	  //double Omega= OmegaM+BNum*(n-5)*OmegaR;
 	  //double Omega= OmegaM+BNum*(n-17)*OmegaR;
-	  double Omega = (n-1)*2*PI*DF;
+	  //double Omega = (n-1)*2*PI*DF;
+		double Omega = DF*2*PI*(n-1);
 	  double ka = Omega/C_0;
+		
+		OF[n] = Omega/(2*PI);
+		
 	  //printf("Omega[%d]=%4.4g   ka[%d] = %4.4g\n",n,Omega[n],n,ka[n]);
   
 	  double complex Transa1 = 0.0 + 0.0*I;
@@ -339,19 +343,21 @@ int main()
 			
 			
 	  }
+		
 	  
 
   }
 	
+	
   /* Writing the Pressure spectrum into a Data */
   FILE *fwritepF;
-  fwritepF = fopen("pF_New.txt","w");	
+  fwritepF = fopen("pF.txt","w");	
 	  
 	for(int j=0;j<FNum;j++)
 	  {
 			for(int i=20;i<21;i++)
 			{
-			  fprintf(fwritepF,"%12.10f	%12.10f\n",creal(pF[j][i]),cimag(pF[j][i]));
+			  fprintf(fwritepF,"%lf %lf\n",creal(pF[j][i]),cimag(pF[j][i]));
 			}
 	  }
   fclose(fwritepF);
@@ -373,7 +379,7 @@ int main()
 	}
 	
   /* Writing the Pressure spectrum into a Data */
-	/* FILE *fwrite33;
+  FILE *fwrite33;
   fwrite33 = fopen("pXOYM.txt","w");	
 	  
 	for(int j=0;j<FNum;j++)
@@ -383,7 +389,7 @@ int main()
 			  fprintf(fwrite33,"%12.9f	%12.9f\n",creal(pXOYM[j][i]),cimag(pXOYM[j][i]));
 			}
 	  }
-  fclose(fwrite33);*/
+  fclose(fwrite33);
 	
   //double Opreal=0;
   //double Opimag=0;
@@ -415,7 +421,7 @@ int main()
 
 
   
-  
+		/*
   int rr;
   OF = make_vector(OF,FNum);
   for(rr=0;rr<FNum;rr++)
@@ -427,7 +433,7 @@ int main()
 	  printf("OF[%d] = %g\n",rr,OF[rr]);
   }
 
-
+*/
   
   rmdir('FD_Spectrum','s');
   mkdir('FD_Spectrum');
@@ -570,7 +576,7 @@ int main()
   free_vector(FRStarP);
   free_vector(FRM); 
   free_vector(FRP);
-  free_vector(OF);
+  
   //free(One);
   
   free_4Ddmatrix(PBD1,OSNum,BNum,DSNum);
@@ -585,6 +591,7 @@ int main()
   free_dmatrix(pF,FNum);
   free_dmatrix(Op,FNum);
   free_dmatrix(pXOYM,FNum);
+	free_vector(OF);
   
 
   
